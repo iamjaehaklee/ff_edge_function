@@ -1,0 +1,90 @@
+
+
+call_get_work_room_details
+get_chat_messages
+call_get_friends
+get_friends
+get_threads_by_work_room_id
+get_chat_message_by_id
+
+call_get_files_by_work_room_id
+get_files_by_work_room_id
+call_get_profile
+get_profile
+call_get_user_notifications
+get_user_notifications
+
+put_chat_message
+get_thread_chat_messages
+put_thread_chat_message
+put_document_annotation
+get_document_annotations_by_work_room_id
+get_document_annotations_by_parent_file_storage_key
+put_test
+put_signature
+put_friend_request
+send_friend_request_email
+send_workroom_request_email
+put_workroom_request
+
+get_received_friend_requests
+get_sent_friend_requests
+check_existing_friend_request
+
+
+answer_friend_request
+answer_work_room_request
+supabase functions new answer_work_room_request
+supabase functions new check_existing_friend_request
+
+supabase functions new put_workroom_request
+
+supabase functions new get_received_friend_requests &&
+supabase functions new get_sent_friend_requests
+
+
+supabase functions new get_received_work_room_requests &&
+supabase functions new get_sent_work_room_requests
+
+
+supabase functions new get_threads_by_work_room_id &&
+deno cache --reload supabase/functions/get_threads_by_work_room_id/index.ts --allow-import &&
+supabase functions deploy put_document_annotation --project-ref jschbqhrzkdqcpbidqhj
+
+deno cache --reload supabase/functions/get_thread_chat_messages/index.ts --allow-import &&
+supabase functions serve get_chat_message_by_id --env-file .env --debug              
+
+chmod +x ./scripts/call_send_friend_request_email.sh                 &&
+./scripts/call_send_friend_request_email.sh
+./scripts/call_put_chat_message.sh
+
+supabase secrets set --env-file .env &&
+supabase secrets list
+
+
+supabase functions deploy get_work_rooms_by_user_id  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy get_work_room_details  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy get_friends  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy get_chat_messages  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy get_user_notifications  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy put_chat_message  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy get_thread_chat_messages  --project-ref jschbqhrzkdqcpbidqhj &&
+supabase functions deploy put_thread_chat_message  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy get_document_annotations_by_work_room_id  --project-ref jschbqhrzkdqcpbidqhj &&
+supabase functions deploy get_document_annotations_by_parent_file_storage_key  --project-ref jschbqhrzkdqcpbidqhj &&
+supabase functions deploy put_signature  --project-ref jschbqhrzkdqcpbidqhj 
+ 
+supabase functions deploy put_workroom_request  --project-ref jschbqhrzkdqcpbidqhj &&
+supabase functions deploy send_workroom_request_email  --project-ref jschbqhrzkdqcpbidqhj 
+
+get_received_friend_requests
+get_sent_friend_requests
+supabase functions deploy send_workroom_request_email  --project-ref jschbqhrzkdqcpbidqhj 
+supabase functions deploy get_received_friend_requests  --project-ref jschbqhrzkdqcpbidqhj  &&  
+supabase functions deploy get_sent_friend_requests  --project-ref jschbqhrzkdqcpbidqhj  
+
+get_received_work_room_requests
+get_sent_work_room_requests
+supabase functions deploy get_received_work_room_requests  --project-ref jschbqhrzkdqcpbidqhj  &&  
+supabase functions deploy answer_friend_request  --project-ref jschbqhrzkdqcpbidqhj  &&
+supabase functions deploy answer_work_room_request  --project-ref jschbqhrzkdqcpbidqhj  
