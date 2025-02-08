@@ -31,9 +31,22 @@ get_received_friend_requests
 get_sent_friend_requests
 check_existing_friend_request
 
-
+get_thread_messages
 answer_friend_request
 answer_work_room_request
+get_parent_message
+
+get_work_room_requests_by_work_room_id
+
+
+update_work_room
+
+supabase functions new put_file_data
+
+supabase functions new get_work_room_requests_by_work_room_id
+
+
+supabase functions new get_parent_message
 supabase functions new answer_work_room_request
 supabase functions new check_existing_friend_request
 
@@ -54,8 +67,8 @@ supabase functions deploy put_document_annotation --project-ref jschbqhrzkdqcpbi
 deno cache --reload supabase/functions/get_thread_chat_messages/index.ts --allow-import &&
 supabase functions serve get_chat_message_by_id --env-file .env --debug              
 
-chmod +x ./scripts/call_send_friend_request_email.sh                 &&
-./scripts/call_send_friend_request_email.sh
+chmod +x ./scripts/call_get_work_rooms_with_participants_by_user_id.sh                 &&
+./scripts/call_get_work_rooms_with_participants_by_user_id.sh
 ./scripts/call_put_chat_message.sh
 
 supabase secrets set --env-file .env &&
@@ -87,4 +100,9 @@ get_received_work_room_requests
 get_sent_work_room_requests
 supabase functions deploy get_received_work_room_requests  --project-ref jschbqhrzkdqcpbidqhj  &&  
 supabase functions deploy answer_friend_request  --project-ref jschbqhrzkdqcpbidqhj  &&
-supabase functions deploy answer_work_room_request  --project-ref jschbqhrzkdqcpbidqhj  
+supabase functions deploy get_parent_chat_messsage  --project-ref jschbqhrzkdqcpbidqhj  
+supabase functions deploy update_chat_message  --project-ref jschbqhrzkdqcpbidqhj  
+supabase functions deploy delete_chat_message  --project-ref jschbqhrzkdqcpbidqhj  
+supabase functions deploy update_work_room  --project-ref jschbqhrzkdqcpbidqhj
+
+supabase functions deploy get_work_rooms_with_participants_by_user_id  --project-ref jschbqhrzkdqcpbidqhj

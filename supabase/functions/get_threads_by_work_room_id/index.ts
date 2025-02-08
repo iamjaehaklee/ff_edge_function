@@ -9,16 +9,16 @@ Deno.serve(async (req) => {
     console.log("Request headers:", JSON.stringify(Object.fromEntries(req.headers)));
 
     // Parse the JSON body
-    const { work_room_id } = await req.json();
+    const { p_work_room_id } = await req.json();
 
     // Log the request body
-    console.log("Request body:", { work_room_id });
+    console.log("Request body:", { p_work_room_id });
 
     // Validate input
-    if (!work_room_id) {
+    if (!p_work_room_id) {
       console.error("Missing work_room_id in the request.");
       return new Response(
-        JSON.stringify({ error: "Missing work_room_id" }),
+        JSON.stringify({ error: "Missing p_work_room_id" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
     }
@@ -31,8 +31,8 @@ Deno.serve(async (req) => {
     );
 
     // Call the RPC function to fetch threads
-    const { data, error } = await supabase.rpc("get_threads_by_work_room", {
-      work_room_id,
+    const { data, error } = await supabase.rpc("get_threads_by_work_room_id", {
+      p_work_room_id,
     });
 
     // Handle RPC errors
@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
 
     // Handle empty data
     if (!data || data.length === 0) {
-      console.log("No threads found for the given work_room_id.");
+      console.log("No threads found for the given p_work_room_id.");
       return new Response(
         JSON.stringify({ threads: [] }),
         { status: 200, headers: { "Content-Type": "application/json" } }
