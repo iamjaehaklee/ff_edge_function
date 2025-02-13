@@ -36,13 +36,13 @@ Deno.serve(async (req) => {
     // Destructure parameters from the body
     const {
       document_id,
-      parent_file_storage_key, // 기존 file_id를 storage_key로 변경
+      parent_file_storage_key, // 기존 file_id 대신 storage_key 사용
       work_room_id,
       page_number,
-      x1,
-      y1,
-      x2,
-      y2,
+      area_left,
+      area_top,
+      area_width,
+      area_height,
       content,
       annotation_type = "manual",
       image_file_storage_key = null,
@@ -53,24 +53,23 @@ Deno.serve(async (req) => {
 
     // Validate required parameters
     if (
-      !parent_file_storage_key || // storage_key 필수 확인
+      !parent_file_storage_key ||
       page_number === undefined ||
-      x1 === undefined ||
-      y1 === undefined ||
-      x2 === undefined ||
-      y2 === undefined ||
+      area_left === undefined ||
+      area_top === undefined ||
+      area_width === undefined ||
+      area_height === undefined ||
       !content ||
       !created_by
     ) {
       console.error("Missing required parameters:", {
-      
         document_id,
         parent_file_storage_key,
         page_number,
-        x1,
-        y1,
-        x2,
-        y2,
+        area_left,
+        area_top,
+        area_width,
+        area_height,
         content,
         created_by,
       });
@@ -86,10 +85,10 @@ Deno.serve(async (req) => {
       parent_file_storage_key,
       work_room_id,
       page_number,
-      x1,
-      y1,
-      x2,
-      y2,
+      area_left,
+      area_top,
+      area_width,
+      area_height,
       content,
       annotation_type,
       image_file_storage_key,
@@ -98,33 +97,35 @@ Deno.serve(async (req) => {
       created_by,
     });
 
-    // Call the RPC function
-    const { data, error } = await supabase.rpc("upsert_document_annotation", {
-      p_document_id: document_id,
-      p_parent_file_storage_key: parent_file_storage_key, // storage_key 전달
-      p_work_room_id: work_room_id,
-      p_page_number: page_number,
-      p_x1: x1,
-      p_y1: y1,
-      p_x2: x2,
-      p_y2: y2,
-      p_content: content,
-      p_annotation_type: annotation_type,
-      p_image_file_storage_key: image_file_storage_key,
-      p_is_ocr: is_ocr,
-      p_ocr_text: ocr_text,
-      p_created_by: created_by,
-    });
+    // Insert a new row into the document_annotations table
+    const { data, error } = await supabase
+      .from("document_annotations")
+      .insert({
+        document_id,
+        parent_file_storage_key,
+        work_room_id,
+        page_number,
+        area_left: area_left,  // 변경된 컬럼명: area_left
+        area_top: area_top,
+        area_width: area_width,
+        area_height: area_height,
+        content,
+        annotation_type,
+        image_file_storage_key,
+        is_ocr,
+        ocr_text,
+        created_by,
+      });
 
     if (error) {
-      console.error("Error calling RPC 'put_document_annotation':", error);
+      console.error("Error inserting document annotation:", error);
       return new Response(
         JSON.stringify({ error: error.message, details: error.details, hint: error.hint }),
         { headers: { "Content-Type": "application/json" }, status: 500 }
       );
     }
 
-    console.log("Annotation processed successfully:", data);
+    console.log("Annotation inserted successfully:", data);
     return new Response(JSON.stringify(data), {
       headers: { "Content-Type": "application/json" },
       status: 200,

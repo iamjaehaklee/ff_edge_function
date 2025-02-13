@@ -40,8 +40,17 @@ get_work_room_requests_by_work_room_id
 
 
 update_work_room
+get_files_by_storage_path
 
-supabase functions new put_file_data
+
+
+get_annotation_treads_by_annotation_id
+put_annotation_thread
+delete_annotation_thread
+update_annotation_thread
+ocr_kr_naver_clova
+
+supabase functions new ocr_kr_naver_clova
 
 supabase functions new get_work_room_requests_by_work_room_id
 
@@ -106,3 +115,14 @@ supabase functions deploy delete_chat_message  --project-ref jschbqhrzkdqcpbidqh
 supabase functions deploy update_work_room  --project-ref jschbqhrzkdqcpbidqhj
 
 supabase functions deploy get_work_rooms_with_participants_by_user_id  --project-ref jschbqhrzkdqcpbidqhj
+
+
+supabase functions deploy get_annotation_treads_by_annotation_id  --project-ref jschbqhrzkdqcpbidqhj &&
+supabase functions deploy put_annotation_thread  --project-ref jschbqhrzkdqcpbidqhj &&
+supabase functions deploy delete_annotation_thread  --project-ref jschbqhrzkdqcpbidqhj &&
+supabase functions deploy ocr_kr_naver_clova  --project-ref jschbqhrzkdqcpbidqhj
+
+get_annotation_treads_by_annotation_id
+put_annotation_thread
+delete_annotation_thread
+update_annotation_thread

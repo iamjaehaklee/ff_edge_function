@@ -38,6 +38,7 @@ Deno.serve(async (req) => {
     const { 
       uploader_id,         // 파일 업로드 시 클라이언트가 전달하는 uploader_id (파일 업로드시, 메시지 첨부용 파일이 아니면 반드시 전달)
       storage_key,         // 예: "work_room_id/타임스탬프가_붙은_파일명"
+      storage_path,        // 파일이 저장된 경로 (옵션)
       file_name,           // 원본 파일명 (클라이언트가 전달)
       file_type,           // MIME 타입 (예: "image/jpeg", "application/pdf" 등)
       work_room_id,        // 파일이 속한 작업방 id
@@ -59,6 +60,7 @@ Deno.serve(async (req) => {
       .insert([
         {
           storage_key: storage_key,
+          storage_path: storage_path || null,
           file_name: file_name,
           file_type: file_type,
           uploader_id: uploader_id,
