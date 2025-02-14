@@ -3,6 +3,10 @@ import { PDFDocument } from "https://esm.sh/pdf-lib@1.17.1";
 
 console.log("Edge Function 'pdf_ocr_file_chunk_kr_naver_clova' is running!");
 
+// ✅ 환경 변수에서 OpenAI 임베딩 함수 URL 및 Supabase Service Role Key 가져오기
+const EMBEDDING_FUNCTION_URL = Deno.env.get("EMBEDDING_FUNCTION_URL");
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("DEV_SUPABASE_SERVICE_ROLE_KEY");
+
 /** OCR 요청을 위한 인터페이스 */
 interface OcrRequest {
   file_table_id: string;
@@ -123,13 +127,37 @@ async function callCLOVAOCRForChunk(pdfBuffer: Uint8Array): Promise<OCRPageResul
   }));
 }
 
+/** OpenAI를 사용하여 텍스트 임베딩 생성 */
+async function getEmbeddingFromOpenAI(text: string): Promise<number[]> {
+  if (!EMBEDDING_FUNCTION_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Missing embedding function URL or Supabase Service Role Key in environment variables.");
+  }
+
+  const response = await fetch(EMBEDDING_FUNCTION_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`, // ✅ Service Role Key 사용
+    },
+    body: JSON.stringify({ text }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to generate embedding: ${await response.text()}`);
+  }
+
+  const result = await response.json();
+  return result.embedding;
+}
+
+
 /** OCR 결과 저장 및 files 테이블 업데이트 */
 async function storeOcrResults(fileInfo: OcrRequest, ocrResults: OCRPageResult[]) {
   const supabaseUrl = Deno.env.get("DEV_SUPABASE_URL");
   const supabaseKey = Deno.env.get("DEV_SUPABASE_SERVICE_ROLE_KEY");
   const supabase = createClient(supabaseUrl, supabaseKey);
-
-  const entries = ocrResults.map((ocrResult, index) => ({
+  
+  const entries = ocrResults.map(async (ocrResult, index) => ({
     file_table_id: fileInfo.file_table_id,
     bucket_name: fileInfo.bucket_name,
     storage_key: fileInfo.storage_key,
@@ -138,6 +166,7 @@ async function storeOcrResults(fileInfo: OcrRequest, ocrResults: OCRPageResult[]
     page_number: index + 1,
     ocr_text: ocrResult.pageText,
     ocr_status: ocrResult.ocrStatus,
+    embedding: await getEmbeddingFromOpenAI(ocrResult.pageText), // ✅ OpenAI 임베딩 생성
     confidence_avg: ocrResult.confidenceAvg,
     converted_image_info: ocrResult.convertedImageInfo,
     raw_response: ocrResult.rawResponse,

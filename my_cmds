@@ -57,9 +57,9 @@ get_file_data_by_storage_key
 extract_docx_text
 extract_hwp_text
 extract_pptx_text
-
-
-supabase functions new extract_pptx_text
+get_embedding_from_openai
+pdf_ocr_file_chunk_kr_naver_clova
+supabase functions new get_embedding_from_openai
 
 supabase functions new get_work_room_requests_by_work_room_id
 
@@ -130,7 +130,11 @@ supabase functions deploy get_annotation_treads_by_annotation_id  --project-ref 
 supabase functions deploy put_annotation_thread  --project-ref jschbqhrzkdqcpbidqhj &&
 supabase functions deploy delete_annotation_thread  --project-ref jschbqhrzkdqcpbidqhj &&
 supabase functions deploy ocr_kr_naver_clova  --project-ref jschbqhrzkdqcpbidqhj
+supabase functions deploy extract_hwp_text  --project-ref jschbqhrzkdqcpbidqhj
 supabase functions deploy extract_pptx_text  --project-ref jschbqhrzkdqcpbidqhj
+supabase functions deploy pdf_ocr_file_chunk_kr_naver_clova  --project-ref jschbqhrzkdqcpbidqhj
+extract_docx_text
+extract_pptx_text
 
 get_annotation_treads_by_annotation_id
 put_annotation_thread
